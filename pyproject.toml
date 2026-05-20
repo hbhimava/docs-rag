@@ -1,0 +1,29 @@
+[project]
+name = "docs-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "markdown>=3.10.2",
+    "openai>=2.37.0",
+    "python-dotenv>=1.2.2",
+    "qdrant-client>=1.18.0",
+    "requests>=2.34.2",
+    "sentence-transformers>=5.5.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipython>=9.13.0",
+    "jupyter>=1.1.1",
+    "pytest>=9.0.3",
+    "ruff>=0.15.13",
+]
+
+[tool.uv]
+package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rag"]
