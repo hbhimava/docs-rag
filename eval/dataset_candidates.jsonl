@@ -1,0 +1,81 @@
+[
+  {"question": "What format should I use to send multiple JSON objects line by line?", "expected_chunk_ids": ["tutorial/stream-json-lines.md::2"], "tags": ["tutorial", "user-vocab"]},
+
+  {"question": "Do I need to specify a return type for streaming binary data?", "expected_chunk_ids": ["advanced/stream-data.md::4"], "tags": ["advanced", "conceptual"]},
+
+  {"question": "How do I run Traefik in front of my app for local testing?", "expected_chunk_ids": ["advanced/behind-a-proxy.md::15"], "tags": ["advanced", "identifier"]},
+
+  {"question": "What's the syntax for setting environment variables when starting the server?", "expected_chunk_ids": ["advanced/settings.md::6"], "tags": ["advanced", "conceptual"]},
+
+  {"question": "What are the risks of using HTTP Basic Auth?", "expected_chunk_ids": ["advanced/security/http-basic-auth.md::7"], "tags": ["advanced", "conceptual"]},
+
+  {"question": "How do I figure out who's logged in inside my endpoint?", "expected_chunk_ids": ["tutorial/security/get-current-user.md::2"], "tags": ["tutorial", "user-vocab", "hard"]},
+
+  {"question": "How do I let my frontend on a different domain talk to my API?", "expected_chunk_ids": ["tutorial/cors.md::6", "tutorial/cors.md::1"], "tags": ["tutorial", "user-vocab", "hard"]},
+
+  {"question": "How can I return an HTML page instead of JSON?", "expected_chunk_ids": ["advanced/custom-response.md::6"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "Best way to speed up my JSON responses?", "expected_chunk_ids": ["advanced/custom-response.md::2"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "What do I need to do to use OAuth2 scopes?", "expected_chunk_ids": ["advanced/security/oauth2-scopes.md::8", "advanced/security/oauth2-scopes.md::6"], "tags": ["advanced", "conceptual"]},
+
+  {"question": "How can I run Uvicorn with multiple worker processes?", "expected_chunk_ids": ["deployment/server-workers.md::0"], "tags": ["deployment", "identifier"]},
+
+  {"question": "In what order do multiple middlewares run?", "expected_chunk_ids": ["tutorial/middleware.md::4"], "tags": ["tutorial", "conceptual"]},
+
+  {"question": "What's the safest way to store user passwords?", "expected_chunk_ids": ["tutorial/security/oauth2-jwt.md::7"], "tags": ["tutorial", "user-vocab"]},
+
+  {"question": "What URL do I use to reach the docs UI when behind a proxy?", "expected_chunk_ids": ["advanced/behind-a-proxy.md::18"], "tags": ["advanced", "conceptual"]},
+
+  {"question": "How do I exclude sensitive fields like passwords from the response?", "expected_chunk_ids": ["tutorial/response-model.md::7"], "tags": ["tutorial", "user-vocab"]},
+
+  {"question": "Where does the virtual environment get created by default?", "expected_chunk_ids": ["virtual-environments.md::3"], "tags": ["root", "conceptual"]},
+
+  {"question": "What counts as an origin in CORS?", "expected_chunk_ids": ["tutorial/cors.md::1"], "tags": ["tutorial", "conceptual"]},
+
+  {"question": "Should dependencies be async functions?", "expected_chunk_ids": ["tutorial/dependencies/index.md::9"], "tags": ["tutorial", "conceptual"]},
+
+  {"question": "How do I make a dependency that takes its own configuration?", "expected_chunk_ids": ["advanced/advanced-dependencies.md::0"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "What are CORS preflight requests?", "expected_chunk_ids": ["tutorial/cors.md::7"], "tags": ["tutorial", "conceptual"]},
+
+  {"question": "What packages come with the standard FastAPI install?", "expected_chunk_ids": ["index.md::38"], "tags": ["root", "easy"]},
+
+  {"question": "What are coroutines and async/await in Python?", "expected_chunk_ids": ["async.md::3"], "tags": ["root", "conceptual"]},
+
+  {"question": "How do I deploy my FastAPI app to the cloud?", "expected_chunk_ids": ["deployment/fastapicloud.md::2"], "tags": ["deployment", "user-vocab"]},
+
+  {"question": "How is the OpenAPI schema generated for my app?", "expected_chunk_ids": ["index.md::31"], "tags": ["root", "conceptual"]},
+
+  {"question": "How do I require a specific scope on a path operation?", "expected_chunk_ids": ["advanced/security/oauth2-scopes.md::6", "advanced/security/oauth2-scopes.md::15"], "tags": ["advanced", "conceptual"]},
+
+  {"question": "How do I split my app across multiple files using routers?", "expected_chunk_ids": ["tutorial/bigger-applications.md::10", "tutorial/bigger-applications.md::7"], "tags": ["tutorial", "user-vocab"]},
+
+  {"question": "What's in the Full Stack FastAPI Template?", "expected_chunk_ids": ["project-generation.md::2"], "tags": ["root", "easy"]},
+
+  {"question": "How do I run setup code at app startup and cleanup on shutdown?", "expected_chunk_ids": ["advanced/events.md::4", "advanced/events.md::9"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "How do I link to static files like CSS from a Jinja template?", "expected_chunk_ids": ["advanced/templates.md::7"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "How do I set a cookie in the response?", "expected_chunk_ids": ["advanced/response-cookies.md::2"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "What type should I use for an uploaded file parameter?", "expected_chunk_ids": ["tutorial/request-files.md::13"], "tags": ["tutorial", "conceptual"]},
+
+  {"question": "How do I containerize a FastAPI app with Docker?", "expected_chunk_ids": ["deployment/docker.md::0"], "tags": ["deployment", "easy"]},
+
+  {"question": "How do I declare webhooks my app sends out?", "expected_chunk_ids": ["advanced/openapi-webhooks.md::1"], "tags": ["advanced", "user-vocab"]},
+
+  {"question": "How do I check which Python version is active in my venv?", "expected_chunk_ids": ["virtual-environments.md::27"], "tags": ["root", "conceptual"]},
+
+  {"question": "What does it actually mean to deploy an application?", "expected_chunk_ids": ["deployment/index.md::0"], "tags": ["deployment", "conceptual"]},
+
+  {"question": "How do I self-host the Swagger UI's CSS and JS?", "expected_chunk_ids": ["how-to/custom-docs-ui-assets.md::7"], "tags": ["how-to", "user-vocab"]},
+  {"question": "Explain how FastAPI supports async code", "expected_chunk_ids": ["async.md::29", "async.md::30"], "tags": ["root", "user-vocab"]},
+
+{"question": "How does FastAPI handle database queries?", "expected_chunk_ids": ["tutorial/sql-databases.md::0"], "tags": ["tutorial", "user-vocab"]},
+
+{"question": "Explain the significance of Server-Sent Events in FastAPI", "expected_chunk_ids": ["tutorial/server-sent-events.md::0"], "tags": ["tutorial", "user-vocab", "hard"]},
+
+{"question": "How does FastAPI handle secure authentication?", "expected_chunk_ids": ["tutorial/security/index.md::0", "tutorial/security/first-steps.md::0"], "tags": ["tutorial", "user-vocab"]},
+{"question": "How do I add WebSocket support to my FastAPI app?", "expected_chunk_ids": ["advanced/websockets.md::0", "advanced/websockets.md::3"], "tags": ["advanced", "user-vocab"]}
+]
