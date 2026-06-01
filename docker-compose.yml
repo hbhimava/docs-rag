@@ -58,6 +58,8 @@ services:
     image: docs-rag:latest
     container_name: docs-rag-ui
     command: ui
+    volumes:
+      - ./src:/app/src
     ports:
       - "127.0.0.1:8501:8501"
       #- "8501:8501"

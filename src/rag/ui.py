@@ -39,6 +39,19 @@ st.caption(
 )
 
 
+# Cache the health probe for 60s so we don't hammer /health on every
+# Streamlit rerun (which happens on every widget interaction).
+@st.cache_data(ttl=60)
+def fetch_health() -> dict | None:
+    try:
+        return requests.get(f"{API_URL}/health", timeout=3).json()
+    except Exception:
+        return None
+
+
+health = fetch_health()
+
+
 with st.sidebar:
     st.header("Settings")
 
@@ -49,6 +62,31 @@ with st.sidebar:
             "How many chunks to retrieve before generation. Higher = "
             "more context (and cost), but past ~6 the LLM tends to "
             "lose focus."
+        ),
+    )
+
+    # Retriever toggle. Options come from /health so the UI only shows
+    # retrievers the API actually has loaded. "(server default)" lets
+    # the server's RETRIEVER env var decide -- useful for A/B by env.
+    if health is not None:
+        available = health.get("retrievers_available", ["dense"])
+        default_retriever = health.get("default_retriever", "dense")
+    else:
+        available = ["dense"]
+        default_retriever = "dense"
+
+    retriever_options = [f"(server default: {default_retriever})"] + available
+    retriever_choice = st.radio(
+        "Retriever",
+        options=retriever_options,
+        index=0,
+        help=(
+            "Which retrieval pipeline to use.\n\n"
+            "- **dense**: BGE embeddings + cosine. Fast, semantic.\n"
+            "- **hybrid**: dense + BM25 lexical, fused with RRF. "
+            "Helps on rare-identifier queries.\n"
+            "- **reranked**: hybrid + cross-encoder rerank. Slower "
+            "(~8s on CPU); see README's eval section for tradeoffs."
         ),
     )
 
@@ -73,11 +111,14 @@ with st.sidebar:
     st.divider()
 
     st.subheader("Backend status")
-    try:
-        h = requests.get(f"{API_URL}/health", timeout=3).json()
-        st.success(f"✅ API up · {h['chunks_indexed']:,} chunks indexed")
-    except Exception as exc:
-        st.error(f"❌ API unreachable at {API_URL}\n\n{exc}")
+    if health is not None:
+        st.success(f"✅ API up · {health['chunks_indexed']:,} chunks indexed")
+        st.caption(
+            f"Default retriever: `{default_retriever}` · "
+            f"Available: {', '.join(f'`{r}`' for r in available)}"
+        )
+    else:
+        st.error(f"❌ API unreachable at {API_URL}")
 
     st.caption(f"API: `{API_URL}`")
 
@@ -104,8 +145,15 @@ def render_message(msg: dict) -> None:
 
         meta = msg.get("meta")
         if meta:
+            # Show the retriever that actually served this query --
+            # important when the user picks "(server default)" or when
+            # the server overrides their pick (e.g. unavailable option).
+            retriever_label = (
+                f" · retriever: `{meta['retriever']}`"
+                if meta.get("retriever") else ""
+            )
             st.caption(
-                f"⏱ {meta['latency_ms']} ms · "
+                f"⏱ {meta['latency_ms']} ms{retriever_label} · "
                 f"{meta['model']} · "
                 f"tokens: {meta['prompt_tokens']} in / "
                 f"{meta['completion_tokens']} out"
@@ -125,12 +173,16 @@ if question:
 
     with st.chat_message("assistant"):
         with st.spinner("Retrieving and generating..."):
-            payload = {
+            payload: dict = {
                 "question": question,
                 "top_k": top_k,
             }
             if section != "(no filter)":
                 payload["section"] = section
+            # Only set retriever if user picked a specific one --
+            # absent means "let the server default decide".
+            if not retriever_choice.startswith("(server default"):
+                payload["retriever"] = retriever_choice
 
             try:
                 t0 = time.perf_counter()
@@ -153,6 +205,7 @@ if question:
                 "meta": {
                     "latency_ms": data["latency_ms"],
                     "model": data["model"],
+                    "retriever": data.get("retriever"),
                     "prompt_tokens": data["prompt_tokens"],
                     "completion_tokens": data["completion_tokens"],
                     "client_latency_ms": client_latency,
