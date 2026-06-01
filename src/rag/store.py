@@ -12,6 +12,7 @@ Uses the modern qdrant-client API:
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
@@ -41,13 +42,15 @@ class SearchResult:
 class VectorStore:
     """Opinionated wrapper around a single Qdrant collection."""
 
+    
+
     def __init__(
-        self,
-        url: str = "http://localhost:6333",
-        collection: str = "fastapi_docs",
-    ) -> None:
-        self.client = QdrantClient(url=url)
-        self.collection = collection
+    self,
+    url: str | None = None,
+    collection: str = "fastapi_docs",) -> None:
+         self.client = QdrantClient(url=url or os.getenv("QDRANT_URL", "http://localhost:6333"))
+         self.collection = collection
+    ...
 
     def recreate_collection(self) -> None:
         """Delete the collection if it exists, then create it fresh.

@@ -1,0 +1,82 @@
+# Three services + one one-shot:
+#   qdrant   — vector DB, reuses the bind mount you already have
+#   api      — FastAPI on :8000
+#   ui       — Streamlit on :8501
+#   indexer  — one-shot to populate Qdrant; run via `docker compose run indexer`
+#
+# Bring up the stack:
+#   docker compose up -d qdrant
+#   docker compose run --rm indexer        # first time only (data persists)
+#   docker compose up -d api ui
+#
+# Tear down (keeps the bind-mounted qdrant_storage on the host):
+#   docker compose down
+
+services:
+  qdrant:
+    image: qdrant/qdrant
+    container_name: docs-rag-qdrant
+    ports:
+      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:6334:6334"
+     # - "6333:6333"
+     # - "6334:6334"
+    volumes:
+      # Same bind mount your existing standalone container uses, so your
+      # indexed vectors carry over with no re-indexing required.
+      - ./qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: docs-rag:latest
+    container_name: docs-rag-api
+    command: api
+    ports:
+      - "127.0.0.1:8000:8000"
+      #- "8000:8000"
+    environment:
+      # Inside the compose network, qdrant resolves to the service name.
+      # Override what store.py defaults to (http://localhost:6333).
+      QDRANT_URL: http://qdrant:6333
+      # Default retriever; per-request override still works.
+      RETRIEVER: dense
+    env_file:
+      # OPENAI_API_KEY for the generator. Same .env you use locally.
+      - .env
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  ui:
+    # Reuses the same image as api — the Streamlit UI is also Python and
+    # also imports from rag.* for type hints / shared models. If you'd
+    # rather not pay the ML deps for the UI service, split the Dockerfile
+    # later; not worth the maintenance overhead today.
+    image: docs-rag:latest
+    container_name: docs-rag-ui
+    command: ui
+    ports:
+      - "127.0.0.1:8501:8501"
+      #- "8501:8501"
+    environment:
+      # Inside the network, hit the api service directly.
+      RAG_API_URL: http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # One-shot. Not started by `docker compose up` because of the profile.
+  # Run explicitly: `docker compose run --rm indexer`.
+  indexer:
+    image: docs-rag:latest
+    profiles: ["tools"]
+    command: indexer
+    environment:
+      QDRANT_URL: http://qdrant:6333
+    env_file:
+      - .env
+    depends_on:
+      - qdrant
